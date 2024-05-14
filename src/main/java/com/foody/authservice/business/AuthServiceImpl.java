@@ -67,22 +67,27 @@ public class AuthServiceImpl implements AuthService {
 
         return new Profile(userId, user.getUsername(), user.getEmail(), userInfo.getFirstName(), userInfo.getLastName(),
                 userInfo.getBio());
-//        return new Profile(userId, user.getUsername(), user.getEmail(), "fname", "lastname",
-//                "mockbio");
+
     }
     @Override
     public void updateUser(UpdateUserRequest request){
         UserCredential userCredentialEntity = this.userCredentialsRepository.findById(request.getId())
                 .orElseThrow(UserNotFound::new);
 
-        emailValidator.validateEmail(request.getEmail(), request.getId());
-        usernameValidator.validateUsername(request.getUsername(), request.getId());
+        if(!userCredentialEntity.getEmail().matches(request.getEmail())){
+            emailValidator.validateEmail(request.getEmail(), request.getId());
+        }
+
+        if(!userCredentialEntity.getUsername().matches(request.getUsername())){
+            usernameValidator.validateUsername(request.getUsername(), request.getId());
+        }
 
         userCredentialEntity.setEmail(request.getEmail());
         userCredentialEntity.setUsername(request.getUsername());
 
         this.userCredentialsRepository.save(userCredentialEntity);
     }
+    
     @Override
     public LoginResponse loginUser(LoginRequest request) throws AuthenticationException {
         UserCredential userCredentialEntity = this.userCredentialsRepository.findByEmail(request.getEmail()).orElseThrow();

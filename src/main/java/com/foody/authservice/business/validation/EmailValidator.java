@@ -11,14 +11,14 @@ public class EmailValidator {
     public void validateEmail(String email, Long userId) throws InvalidEmailException {
 
         if(userId != null){
-            if(userCredentialsRepository.existsByEmailAndId(email, userId)){
+            if(userCredentialsRepository.existsByEmailExcludingUserId(email, userId)){
                 throw new InvalidEmailException();
             }
         }
 
-        if(userCredentialsRepository.existsByEmail(email)){
-            throw new InvalidEmailException();
-        }
+//        if(userCredentialsRepository.existsByEmail(email)){
+//            throw new InvalidEmailException();
+//        }
 
     }
 }

@@ -41,10 +41,10 @@ public class AuthController {
     }
 
     @PutMapping("/update/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
         request.setId(id);
         authService.updateUser(request);
+        return ResponseEntity.noContent().build();
     }
 
 }

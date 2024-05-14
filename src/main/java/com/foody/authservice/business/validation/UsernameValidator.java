@@ -14,15 +14,9 @@ public class UsernameValidator {
     public void validateUsername(String username, Long userId) throws InvalidUsernameException {
 
         if(userId != null){
-
-            if(userCredentialsRepository.existsByUsernameAndId(username, userId)){
-                throw new InvalidUsernameException();
+            if(userCredentialsRepository.existsByUsernameExcludingUserId(username, userId)){
+                throw new InvalidEmailException();
             }
         }
-
-        if(userCredentialsRepository.existsByUsername(username)){
-            throw new InvalidUsernameException();
-        }
-
     }
 }

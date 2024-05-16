@@ -17,6 +17,7 @@ import com.foody.authservice.persistence.UserCredentialsRepository;
 import com.foody.authservice.persistence.entity.UserCredential;
 import com.foody.authservice.persistence.entity.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import javax.naming.AuthenticationException;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
     private AuthEventPublisher authEventPublisher;
@@ -60,9 +62,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Profile getUser(Long userId){
+
         UserInfo userInfo = this.serviceClient.getUser(userId);
+        log.info("user info user client {}", userInfo);
         UserCredential userCredential = userCredentialsRepository.findById(userId)
                 .orElseThrow(UserNotFound::new);
+        log.info("userCredential {}", userCredential);
         User user = new User(userCredential.getUsername(), userCredential.getEmail());
 
         return new Profile(userId, user.getUsername(), user.getEmail(), userInfo.getFirstName(), userInfo.getLastName(),
@@ -87,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
 
         this.userCredentialsRepository.save(userCredentialEntity);
     }
-    
+
     @Override
     public LoginResponse loginUser(LoginRequest request) throws AuthenticationException {
         UserCredential userCredentialEntity = this.userCredentialsRepository.findByEmail(request.getEmail()).orElseThrow();

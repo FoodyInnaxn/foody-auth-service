@@ -15,5 +15,4 @@ spec:
       targetPort: 8089
   selector:
     io.kompose.service: auth-service
-status:
-  loadBalancer: {}
+  type: ClusterIP

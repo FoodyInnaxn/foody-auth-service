@@ -10,6 +10,7 @@ import com.foody.authservice.domain.request.UpdateUserRequest;
 import com.foody.authservice.domain.response.CreateUserResponse;
 import com.foody.authservice.domain.response.LoginResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import javax.naming.AuthenticationException;
 
 @RestController
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
     private final AuthService authService;
 
@@ -37,6 +39,10 @@ public class AuthController {
     @GetMapping("/foody/profile/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Profile getProfile(@PathVariable long id){
+//        try {
+//            return this.authService.getUser(id);
+//        }
+        log.info("controller getProfile,{}",this.authService.getUser(id) );
         return this.authService.getUser(id);
     }
 
